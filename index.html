@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>YouData</title>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script>
+            (function(){
+                var apps = ["icon","tuwen"]
+                var el = document.getElementById("container")
+                apps.forEach( (d) => {
+                    var div = document.createElement("div")
+                    var img = document.createElement("img")
+                    img.setAttribute("src","/"+d+"/img/icon-192.png")
+                    img.onclick = (e) => {
+                        window.open("/"+d)
+                    }
+                    div.appendChild(img)
+                    container.appendChild(div)
+
+                })
+            }
+
+            )()
+        </script>
+    </body>
+
+</html>
