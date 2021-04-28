@@ -1,9 +1,29 @@
 [
-    {"name":"icon"},
-    {"name":"tuwen"},
-    {"name":"zi"},
+    {
+        "name":"Omics Icon Maker",
+        "icon":"/ome_icon/img/icon-192.png",
+        "sw":"/ome_icon/sw.js",
+        "URL":"/ome_icon"
+    },
+    {
+        "name":"识字",
+        "icon":"/zi/img/icon-192.png",
+        "sw":"/zi/sw.js",
+        "URL":"/zi"
+    },
+    {
+        "name":"诗图",
+        "icon":"/tuwen/img/icon-192.png",
+        "sw":"/tuwen/sw.js",
+        "URL":"/tuwen"
+    },
+    {
+        "name":"图标",
+        "icon":"/icon/img/icon-192.png",
+        "sw":"/icon/sw.js",
+        "URL":"/icon"
+    },
     {"name":"font_icon"},
-    {"name":"ome_icon"},
     {"name":"text2pic"}
 
 ]
