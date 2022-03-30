@@ -20,13 +20,25 @@
             position: relative;
         }
         #menu {
-            background-color:#2E6789;
-            color: #FFF;
+            background-color:#FFFFFF;
+            color: #333333;
             padding: 5px;
             cursor: default;
+            border-bottom: solid 1px #CCC;
         }
         #container {
+            border-top: solid 1px #DDD;
             text-align:center;
+        }
+        #title {
+          color:#A00000;
+          font-size:24px;
+          font-weight:bold;
+
+        }
+        #subtitle {
+          color:#1182C2;
+          font-size:22px;
         }
 
     </style>
@@ -35,7 +47,9 @@
 <body>
     <div>
     <div id="menu">
-        <span style="padding-right:10px;font-size:26px"> YouData Catalog </span>
+        <span id="title">YouData</span>
+        <span id="subtitle">Studio</span>
+        <span style="padding-right:10px;font-size:22px;color:grey">Catalog</span>
     </div>
     <div id="container">
     </div>
