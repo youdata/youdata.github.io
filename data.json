@@ -1,11 +1,5 @@
 [
     {
-        "name":"Omics Icon Maker",
-        "icon":"/ome_icon/img/icon-192.png",
-        "sw":"/ome_icon/sw.js",
-        "URL":"/ome_icon"
-    },
-    {
         "name":"识字",
         "icon":"/zi/img/icon-192.png",
         "sw":"/zi/sw.js",
