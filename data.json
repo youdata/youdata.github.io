@@ -19,7 +19,7 @@
     },
     {
         "name":"图标",
-        "icon":"/icon/img/icon-192.png",
+        "icon":"/icon/icon.svg",
         "sw":"/icon/sw.js",
         "URL":"/icon"
     },
