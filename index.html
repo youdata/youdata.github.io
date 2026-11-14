@@ -1,84 +1,154 @@
-<!DOCTYPE html >
-<html>
-
+<!doctype html>
+<html lang="zh-Hans">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>YouData Catalog</title>
-    <script src="./lib.js"></script>
-    <link rel="stylesheet" href="./style/font.css" type="text/css" />
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0px;
-            padding: 0px;
-            font-family: sans-serif, serif, arial;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>有数 · YouData</title>
+<meta name="description" content="有数工坊 YouData — deep-zoom pages to read and explore: a world atlas of lights and rivers, Su Shi's Cold Food scroll.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2315130f'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23e3b55a' font-family='serif'%3E数%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f6f3ec; --ink: #1d1a15; --muted: #6b6457; --line: #ddd5c6; --card: #fffdf8;
+    --accent: #a8590f; --shadow: 0 1px 2px rgba(40, 30, 10, .06), 0 8px 24px rgba(40, 30, 10, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12110e; --ink: #ece6da; --muted: #9a9283; --line: #2c2924; --card: #1a1814;
+      --accent: #e3b55a; --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 
-        body {
-            position: relative;
-        }
-        #menu {
-            background-color:#FFFFFF;
-            color: #333333;
-            padding: 5px;
-            cursor: default;
-            border-bottom: solid 1px #CCC;
-        }
-        #container {
-            border-top: solid 1px #DDD;
-            text-align:center;
-            display: flex;
-            flex-wrap: wrap;
-            padding-bottom: 20px;
-            overflow-y: auto;
-            flex: 0 1 auto;
-            justify-content: center;
-            padding-top: 50px;
-        }
-        #title {
-          color:#A93400;
-          font-size:24px;
-          font-weight:bold;
+  header { padding: 64px 0 40px; }
+  .brand { font: 600 15px/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  h1 {
+    margin: 14px 0 12px; font-weight: 700; letter-spacing: -.01em;
+    font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
+    font-size: clamp(34px, 6vw, 56px); line-height: 1.1;
+  }
+  h1 span { color: var(--muted); font-weight: 400; }
+  .lede { max-width: 640px; margin: 0; color: var(--muted); font-size: 17px; }
 
-        }
-        #subtitle {
-          color:#0057BA;
-          font-size:22px;
-        }
+  .works { display: grid; gap: 28px; padding-bottom: 56px; }
+  .work {
+    display: grid; grid-template-columns: 1.35fr 1fr; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); text-decoration: none;
+    transition: transform .2s ease;
+  }
+  .work:hover { transform: translateY(-2px); }
+  .work:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .work .pic { background: #0b0b0d; min-height: 260px; }
+  .work .pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .work.wide { grid-template-columns: 1fr; }
+  .work.wide .pic { min-height: 0; aspect-ratio: 3.25 / 1; background: #15130f; }
+  .work .text { padding: 28px 30px 30px; display: flex; flex-direction: column; gap: 10px; }
+  .work h2 {
+    margin: 0; font-size: 26px; line-height: 1.25;
+    font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
+  }
+  .work h2 small { display: block; margin-top: 4px; font: 400 15px/1.4 system-ui, sans-serif; color: var(--muted); }
+  .work p { margin: 0; }
+  .work .zh { color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 8px; }
+  .tags span { font-size: 12.5px; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+  .go { color: var(--accent); font-weight: 600; font-size: 15px; }
+  .work.wide .text { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; align-content: start; }
+  .work.wide .text > h2 { grid-column: 1; }
+  .work.wide .text > p { grid-column: 2; }
+  .work.wide .text > .zh { grid-row: 1; }
+  .work.wide .text > .tags { grid-column: 1; grid-row: 2; align-self: start; margin-top: 0; padding-top: 4px; }
+  .work.wide .text > .go { grid-column: 2; }
 
-    </style>
+  section.archive { border-top: 1px solid var(--line); padding: 28px 0 8px; }
+  details summary {
+    cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-weight: 600;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸"; color: var(--muted); transition: transform .15s; display: inline-block; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details summary small { font-weight: 400; color: var(--muted); }
+  .old { list-style: none; padding: 0; margin: 18px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2px 24px; }
+  .old li { padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+  .old a { text-decoration: none; color: var(--muted); }
+  .old a:hover { color: var(--ink); text-decoration: underline; }
+  .old b { font-weight: 500; margin-right: 6px; }
+  .note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+  footer { padding: 36px 0 48px; color: var(--muted); font-size: 13.5px; }
+
+  @media (max-width: 760px) {
+    header { padding: 40px 0 28px; }
+    .work, .work.wide .text { grid-template-columns: 1fr; }
+    .work .pic { min-height: 0; aspect-ratio: 16 / 10; }
+    .work.wide .pic { aspect-ratio: 2.4 / 1; }
+    .work.wide .text > * { grid-column: auto !important; grid-row: auto !important; }
+    .work.wide .text > .tags { padding-top: 8px; }
+    .work .text { padding: 22px 20px 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .work { transition: none; } .work:hover { transform: none; } }
+</style>
 </head>
-
 <body>
-    <div>
-    <div id="menu">
-        <span id="title">YouData</span>
-        <span id="subtitle">Studio</span>
-        <span style="padding-right:10px;font-size:22px;color:grey">Catalog</span>
-    </div>
-    <div id="container">
-    </div>
-    </div>
-    <script>
-        (function(S){
-            var el = document.getElementById("container")
-            fetch("./data.json",{})
-                .then( d => d.json())
-                .then(d => {
-                    console.log(d)
-                    d.forEach((d)=>{
-                        var c = new S.AppCard()
-                        c.data = d  
-                        el.appendChild(c)
-                    })
-                })
-                .catch(e => {
-                    console.warn("error",e)
-                })
-        })(sand)
-    </script>
-</body>
+<div class="wrap">
+  <header>
+    <div class="brand">有数工坊 · YouData</div>
+    <h1>大图细读 <span>· Pages to zoom into</span></h1>
+    <p class="lede">一张图，从全貌放大到细节：可搜索、可缩放，并附导览。<br>
+      One picture, from the whole down to the detail — search it, zoom into it, or let the tour show you round.</p>
+  </header>
 
+  <main class="works">
+    <a class="work" href="/world-atlas/">
+      <div class="pic"><img src="img/world-atlas.webp" width="1060" height="662" alt="Rivers of China coloured by the ocean they reach, over the night lights, with city names"></div>
+      <div class="text">
+        <h2>灯火与河流<small>World atlas — lights, rivers, relief</small></h2>
+        <p>Every light seen from space, every river on Earth, the relief beneath them and the cities they meet — one map to search and zoom.</p>
+        <p class="zh">太空中看到的每一处灯火、地球上的每一条河、地形起伏与沿河城市，同在一张可搜索、可缩放的地图上。</p>
+        <div class="tags"><span>12,000 places</span><span>45 river basins</span><span>中英双语导览</span></div>
+        <span class="go">Open the atlas →</span>
+      </div>
+    </a>
+
+    <a class="work wide" href="/hanshi-tie/">
+      <div class="pic"><img src="img/hanshi-tie.webp" width="1600" height="492" alt="Su Shi's Cold Food scroll with Huang Tingjian's colophon and the Qianlong frontispiece, annotated"></div>
+      <div class="text">
+        <h2>苏轼 · 黄州寒食诗帖<small>Su Shi's Cold Food Observance scroll</small></h2>
+        <p class="zh">人称“天下第三行书”。从卷首到卷尾展开：本幅十七列逐列释文，黄庭坚跋、乾隆御笔引首一一注解。</p>
+        <p>Called the third-greatest running script under heaven, unrolled end to end: the poem's seventeen columns transcribed one by one, Huang Tingjian's colophon and the Qianlong frontispiece annotated.</p>
+        <div class="tags"><span>台北故宫博物院藏</span><span>deep zoom</span><span>逐列释文</span></div>
+        <span class="go">展开长卷 →</span>
+      </div>
+    </a>
+  </main>
+
+  <section class="archive">
+    <details>
+      <summary>旧作 · Archive <small>早期的小应用，已不再维护 — early apps, no longer maintained</small></summary>
+      <ul class="old">
+        <li><a href="/zi/"><b>识字</b>Learning characters</a></li>
+        <li><a href="/tuwen/"><b>诗图</b>Poems as pictures</a></li>
+        <li><a href="/icon/"><b>汉字图标</b>Character icons</a></li>
+        <li><a href="/font_icon/"><b>font_icon</b>Google font to icon</a></li>
+        <li><a href="/text2pic/"><b>text2pic</b>Text to picture</a></li>
+        <li><a href="/tangshi/"><b>全唐诗</b>Tang poems</a></li>
+        <li><a href="/songci/"><b>宋词</b>Song ci poems</a></li>
+        <li><a href="/geci/"><b>歌词</b>Song lyrics</a></li>
+        <li><a href="/shiji/"><b>史记</b>Records of the Grand Historian</a></li>
+        <li><a href="/colores/"><b>配色事典</b>A dictionary of colour schemes</a></li>
+        <li><a href="/iris/"><b>Iris</b>Data browser</a></li>
+      </ul>
+      <p class="note">这些页面保留原样，可能已无法正常使用。 These pages are kept as they were and may no longer work.</p>
+    </details>
+  </section>
+
+  <footer>© 有数工坊 YouData · <a href="https://github.com/youdata">github.com/youdata</a></footer>
+</div>
+</body>
 </html>
