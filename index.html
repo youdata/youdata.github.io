@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>有数 · YouData</title>
-<meta name="description" content="有数工坊 YouData — deep-zoom pages to read and explore: a world atlas of lights and rivers, a world-history timeline, a map of heart-regeneration research, Chinese poems, and calligraphy handscrolls read column by column.">
+<meta name="description" content="有数工坊 YouData — deep-zoom pages to read and explore: a world atlas of lights and rivers, a world-history timeline, Chinese poems, calligraphy handscrolls read column by column, two of Leonardo's paintings, and a map of heart-regeneration research.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2315130f'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23e3b55a' font-family='serif'%3E数%3C/text%3E%3C/svg%3E">
 <style>
   :root {
@@ -83,6 +83,11 @@
   .mini h3 { margin: 0; font-size: 18px; line-height: 1.3; font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif; }
   .mini h3 small { display: block; margin-top: 2px; font: 400 13px/1.4 system-ui, sans-serif; color: var(--muted); }
   .mini p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  /* two to a row, larger, pictures 16:9 (a painting beside its callouts) */
+  .minis.two { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+  .minis.two img { aspect-ratio: 16 / 9; }
+  .minis.two .t { padding: 14px 18px 18px; }
+  .minis.two h3 { font-size: 21px; }
 
   section.archive { border-top: 1px solid var(--line); padding: 28px 0 8px; }
   details summary {
@@ -109,6 +114,7 @@
     .work.wide .text > * { grid-column: auto !important; grid-row: auto !important; }
     .work.wide .text > .tags { padding-top: 8px; }
     .work .text { padding: 22px 20px 24px; }
+    .minis.two { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) { .work, .mini { transition: none; } .work:hover, .mini:hover { transform: none; } }
 </style>
@@ -188,6 +194,17 @@
         <div class="t"><h3>赵孟頫 · 行书前赤壁赋<small>Former Ode on the Red Cliff</small></h3><p>卷首自画东坡像，四十五列逐列释文。</p></div></a>
       <a class="mini" href="/zhao-chibi-hou/"><img src="img/zhao-chibi-hou.webp" width="640" height="400" alt="Zhao Mengfu's Latter Ode on the Red Cliff, columns with their readings" loading="lazy">
         <div class="t"><h3>赵孟頫 · 行书后赤壁赋<small>Latter Ode on the Red Cliff</small></h3><p>三十一列逐列释文，及鲜于枢等人题跋。</p></div></a>
+    </div>
+  </section>
+
+  <section class="set" aria-labelledby="paintings">
+    <h2 id="paintings">名画细读<small>Paintings, detail by detail</small></h2>
+    <p class="sub">达芬奇的两幅画，原图放大到细节，旁注逐一指出，附英文导览。 — Two of Leonardo's paintings at full resolution, their details called out, each with a tour in English.</p>
+    <div class="minis two">
+      <a class="mini" href="/leonardo-mona-lisa/"><img src="img/leonardo-mona-lisa.webp" width="1060" height="596" alt="The Mona Lisa with callouts: the crack, the eyebrows, the smile, the winding road, the bridge" loading="lazy">
+        <div class="t"><h3>蒙娜丽莎<small>Leonardo da Vinci · Mona Lisa · Louvre</small></h3><p>放大到裂纹、眉毛、微笑与远处的桥；她是谁、1911 年的失窃、清漆之下的画层。</p></div></a>
+      <a class="mini" href="/leonardo-saint-anne/"><img src="img/leonardo-saint-anne.webp" width="1060" height="596" alt="The Virgin and Child with Saint Anne with callouts: the blue distance, Saint Anne, Mary, the tree, Freud's vulture, the Child and lamb" loading="lazy">
+        <div class="t"><h3>圣母子与圣安妮<small>Leonardo da Vinci · The Virgin and Child with Saint Anne · Louvre</small></h3><p>从远山、圣安妮、未完成的玛利亚头像到弗洛伊德的「秃鹫」；草图与其他版本，2011–12 年的修复。</p></div></a>
     </div>
   </section>
 
