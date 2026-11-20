@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>有数 · YouData</title>
-<meta name="description" content="有数工坊 YouData — deep-zoom pages to read and explore: a world atlas of lights and rivers, Su Shi's Cold Food scroll.">
+<meta name="description" content="有数工坊 YouData — deep-zoom pages to read and explore: a world atlas of lights and rivers, a world-history timeline, a map of heart-regeneration research, Chinese poems, and calligraphy handscrolls read column by column.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2315130f'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23e3b55a' font-family='serif'%3E数%3C/text%3E%3C/svg%3E">
 <style>
   :root {
@@ -66,6 +66,24 @@
   .work.wide .text > .tags { grid-column: 1; grid-row: 2; align-self: start; margin-top: 0; padding-top: 4px; }
   .work.wide .text > .go { grid-column: 2; }
 
+  /* a set of smaller works: one heading, a grid of cards */
+  section.set { padding: 4px 0 56px; }
+  .set > h2 { margin: 0; font-size: 24px; line-height: 1.3; font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif; }
+  .set > h2 small { font: 400 15px/1.4 system-ui, sans-serif; color: var(--muted); margin-left: 8px; }
+  .set > .sub { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+  .minis { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 18px; margin-top: 18px; }
+  .mini {
+    display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    overflow: hidden; box-shadow: var(--shadow); text-decoration: none; transition: transform .2s ease;
+  }
+  .mini:hover { transform: translateY(-2px); }
+  .mini:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .mini img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #15130f; }
+  .mini .t { padding: 12px 14px 14px; }
+  .mini h3 { margin: 0; font-size: 18px; line-height: 1.3; font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif; }
+  .mini h3 small { display: block; margin-top: 2px; font: 400 13px/1.4 system-ui, sans-serif; color: var(--muted); }
+  .mini p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+
   section.archive { border-top: 1px solid var(--line); padding: 28px 0 8px; }
   details summary {
     cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-weight: 600;
@@ -92,7 +110,7 @@
     .work.wide .text > .tags { padding-top: 8px; }
     .work .text { padding: 22px 20px 24px; }
   }
-  @media (prefers-reduced-motion: reduce) { .work { transition: none; } .work:hover { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .work, .mini { transition: none; } .work:hover, .mini:hover { transform: none; } }
 </style>
 </head>
 <body>
@@ -105,6 +123,17 @@
   </header>
 
   <main class="works">
+    <a class="work" href="/heart-regen/">
+      <div class="pic"><img src="img/heart-regen.webp" width="1060" height="662" alt="Research papers on heart regeneration as coloured dots, grouped by topic: cardiomyocyte proliferation, zebrafish, inflammation, cell therapy"></div>
+      <div class="text">
+        <h2>心脏再生文献图<small>Regrowing the heart — a map of the research</small></h2>
+        <p>12,185 research papers on heart regeneration, one dot each, placed by the words in their titles and abstracts — similar papers sit together. Find any paper by title or DOI, or click a dot for its card and a link to it.</p>
+        <p class="zh">一万二千余篇心脏再生研究论文，一篇一点，按标题与摘要的用词排布，相近的论文聚在一起。可按标题或 DOI 查找，点任一点即见其出处与链接。</p>
+        <div class="tags"><span>12,185 papers</span><span>14 topics</span><span>OpenAlex</span></div>
+        <span class="go">Open the map →</span>
+      </div>
+    </a>
+
     <a class="work" href="/world-history/">
       <div class="pic"><img src="img/world-history.webp" width="1060" height="760" alt="A timeline of Italy 1440–1610: its states and wars, and portraits of Leonardo, Michelangelo, Columbus and Galileo along their lives"></div>
       <div class="text">
@@ -149,6 +178,29 @@
       </div>
     </a>
   </main>
+
+  <section class="set" aria-labelledby="scrolls">
+    <h2 id="scrolls">书法长卷<small>Calligraphy handscrolls</small></h2>
+    <p class="sub">名帖逐列释读，可放大到一笔一画，并附导览。 — Great scrolls read column by column, down to a single stroke, each with a tour.</p>
+    <div class="minis">
+      <a class="mini" href="/lanting-xu/"><img src="img/lanting-xu.webp" width="640" height="400" alt="The Shenlong copy of the Orchid Pavilion Preface, columns with their readings" loading="lazy">
+        <div class="t"><h3>王羲之 · 兰亭集序<small>Orchid Pavilion Preface · Shenlong copy</small></h3><p>神龙本，二十八列逐列释文，二十个「之」字一一标出。</p></div></a>
+      <a class="mini" href="/gushi-sitie/"><img src="img/gushi-sitie.webp" width="640" height="400" alt="The opening of the cursive scroll Four Ancient Poems" loading="lazy">
+        <div class="t"><h3>张旭（传）· 古诗四帖<small>Four Ancient Poems</small></h3><p>三张照片拼成一卷狂草，四首诗与历代题跋原文。</p></div></a>
+      <a class="mini" href="/jizhi-gao/"><img src="img/jizhi-gao.webp" width="640" height="400" alt="Yan Zhenqing's draft with its struck-out characters circled" loading="lazy">
+        <div class="t"><h3>颜真卿 · 祭侄文稿<small>Draft of a Requiem to My Nephew</small></h3><p>二十四列逐列释读，涂改与旁添一一标出，及历代题跋。</p></div></a>
+      <a class="mini" href="/su-shi-chibi/"><img src="img/su-shi-chibi.webp" width="640" height="400" alt="Su Shi's brushwork close up in the Ode on the Red Cliff" loading="lazy">
+        <div class="t"><h3>苏轼 · 赤壁赋<small>Ode on the Red Cliff</small></h3><p>五十一列逐列释文，卷首文徵明补书三十六字。</p></div></a>
+      <a class="mini" href="/su-shi-dongting/"><img src="img/su-shi-dongting.webp" width="640" height="400" alt="Su Shi's running script close up in the Ode to Dongting Spring Wine" loading="lazy">
+        <div class="t"><h3>苏轼 · 洞庭春色赋 · 中山松醪赋<small>Two odes on wine</small></h3><p>两篇酒赋七十七列逐列释文，一〇九四年南迁途中自跋。</p></div></a>
+      <a class="mini" href="/su-shi-letters/"><img src="img/su-shi-letters.webp" width="640" height="400" alt="Su Shi's letter Xin sui zhan qing tie close up, with its collectors' seals" loading="lazy">
+        <div class="t"><h3>苏轼 · 尺牍里的一生<small>A life in his own hand</small></h3><p>五件墨迹，同一比例，从治平帖到渡海帖。</p></div></a>
+      <a class="mini" href="/zhao-chibi-qian/"><img src="img/zhao-chibi-qian.webp" width="640" height="400" alt="Zhao Mengfu's portrait of Su Shi at the head of the Former Ode on the Red Cliff" loading="lazy">
+        <div class="t"><h3>赵孟頫 · 行书前赤壁赋<small>Former Ode on the Red Cliff</small></h3><p>卷首自画东坡像，四十五列逐列释文。</p></div></a>
+      <a class="mini" href="/zhao-chibi-hou/"><img src="img/zhao-chibi-hou.webp" width="640" height="400" alt="Zhao Mengfu's Latter Ode on the Red Cliff, columns with their readings" loading="lazy">
+        <div class="t"><h3>赵孟頫 · 行书后赤壁赋<small>Latter Ode on the Red Cliff</small></h3><p>三十一列逐列释文，及鲜于枢等人题跋。</p></div></a>
+    </div>
+  </section>
 
   <section class="archive">
     <details>
