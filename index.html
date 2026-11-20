@@ -1,103 +1,134 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-Hans" data-lang="zh">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>有数 · YouData</title>
-<meta name="description" content="有数工坊 YouData — deep-zoom pages to read and explore: a world atlas of lights and rivers, a world-history timeline, Chinese poems, calligraphy handscrolls read column by column, two of Leonardo's paintings, Andromeda, the Milky Way, Perseverance's road on Mars, the protein universe, and a map of heart-regeneration research.">
+<meta name="description" content="有数工坊 YouData — deep-zoom pages to read and explore, in English and Chinese: a world atlas of lights and rivers, a world-history timeline, Chinese poems, calligraphy handscrolls read column by column, Along the River during the Qingming Festival, two of Leonardo's paintings, Andromeda, the Milky Way, the whole Moon, Perseverance's road on Mars, the protein universe, a pathology slide, a lymph node cell by cell, and a map of heart-regeneration research.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2315130f'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23e3b55a' font-family='serif'%3E数%3C/text%3E%3C/svg%3E">
+<script>
+  // the language before first paint: the reader's choice, else the browser's (Chinese → 中, anything else → EN)
+  (function () {
+    var l = null
+    try { l = localStorage.getItem('youdata-lang') } catch (e) {}
+    if (l !== 'en' && l !== 'zh') l = /^zh/i.test(navigator.language || '') ? 'zh' : 'en'
+    document.documentElement.setAttribute('data-lang', l)
+    document.documentElement.lang = l === 'zh' ? 'zh-Hans' : 'en'
+  })()
+</script>
 <style>
   :root {
-    --bg: #f6f3ec; --ink: #1d1a15; --muted: #6b6457; --line: #ddd5c6; --card: #fffdf8;
-    --accent: #a8590f; --shadow: 0 1px 2px rgba(40, 30, 10, .06), 0 8px 24px rgba(40, 30, 10, .08);
+    --bg: #f6f3ec; --ink: #1d1a15; --muted: #6b6457; --line: #ddd5c6; --card: #fffdf8; --bar: rgba(246, 243, 236, .88);
+    --accent: #a8590f; --accent-ink: #fff; --mark: #f3dfb8;
+    --shadow: 0 1px 2px rgba(40, 30, 10, .06), 0 8px 24px rgba(40, 30, 10, .08);
+    --serif: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #12110e; --ink: #ece6da; --muted: #9a9283; --line: #2c2924; --card: #1a1814;
-      --accent: #e3b55a; --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+      --bg: #12110e; --ink: #ece6da; --muted: #9a9283; --line: #2c2924; --card: #1a1814; --bar: rgba(18, 17, 14, .86);
+      --accent: #e3b55a; --accent-ink: #15130f; --mark: #4a3a1c;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
     }
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 76px; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font: 16px/1.6 system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
   }
   a { color: inherit; }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 
-  header { padding: 64px 0 40px; }
-  .brand { font: 600 15px/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
-  h1 {
-    margin: 14px 0 12px; font-weight: 700; letter-spacing: -.01em;
-    font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
-    font-size: clamp(34px, 6vw, 56px); line-height: 1.1;
-  }
-  h1 span { color: var(--muted); font-weight: 400; }
-  .lede { max-width: 640px; margin: 0; color: var(--muted); font-size: 17px; }
+  /* one language at a time: every text is there twice */
+  html[data-lang="zh"] .en, html[data-lang="en"] .zh { display: none !important; }
 
-  .works { display: grid; gap: 28px; padding-bottom: 56px; }
-  .work {
-    display: grid; grid-template-columns: 1.35fr 1fr; background: var(--card); border: 1px solid var(--line);
-    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); text-decoration: none;
-    transition: transform .2s ease;
-  }
-  .work:hover { transform: translateY(-2px); }
-  .work:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .work .pic { background: #0b0b0d; min-height: 260px; }
+  /* ── the bar: brand, sections, search, language ─────────────────────────────────────────────────────────────── */
+  .bar { position: sticky; top: 0; z-index: 10; background: var(--bar); backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--line); }
+  .bar .wrap { display: flex; align-items: center; gap: 18px; height: 60px; }
+  .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; font-weight: 650; white-space: nowrap; }
+  .logo i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: #15130f; color: #e3b55a;
+    font: 600 19px/1 var(--serif); font-style: normal; }
+  nav.sections { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+  nav.sections::-webkit-scrollbar { display: none; }
+  nav.sections a { text-decoration: none; color: var(--muted); font-size: 14.5px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+  nav.sections a:hover { color: var(--ink); background: var(--line); }
+  .find { position: relative; flex: 0 1 280px; }
+  .find input { width: 100%; font: inherit; font-size: 15px; color: var(--ink); background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 34px 8px 34px; outline: none; }
+  .find input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+  .find input::-webkit-search-cancel-button { display: none; }
+  .find svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .find kbd { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); font: 12px/1 system-ui, sans-serif; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 5px; padding: 3px 6px; }
+  .find button.clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: none; color: var(--muted);
+    font-size: 18px; line-height: 1; padding: 4px 6px; cursor: pointer; border-radius: 6px; }
+  .find button.clear:hover { color: var(--ink); }
+  .lang { display: flex; border: 1px solid var(--line); border-radius: 10px; padding: 2px; background: var(--card); }
+  .lang button { font: 600 13.5px/1 system-ui, sans-serif; border: 0; background: none; color: var(--muted); padding: 7px 10px; border-radius: 8px; cursor: pointer; }
+  html[data-lang="en"] .lang [data-set="en"], html[data-lang="zh"] .lang [data-set="zh"] { background: var(--accent); color: var(--accent-ink); }
+
+  /* ── the opening ─────────────────────────────────────────────────────────────────────────────────────────────── */
+  header.top { padding: 48px 0 6px; }
+  .brand { font: 600 14px/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  h1 { margin: 12px 0 12px; font: 700 clamp(34px, 6vw, 54px)/1.1 var(--serif); letter-spacing: -.01em; }
+  .lede { max-width: 660px; margin: 0; color: var(--muted); font-size: 17px; }
+  .count { margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .count span { font-size: 13px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+
+  /* ── sections ───────────────────────────────────────────────────────────────────────────────────────────────── */
+  section.set { padding: 26px 0 30px; }
+  .set > h2 { margin: 0; font: 600 25px/1.3 var(--serif); }
+  .set > .sub { margin: 6px 0 0; color: var(--muted); font-size: 15px; max-width: 820px; }
+
+  /* big cards: picture beside text */
+  .works { display: grid; gap: 22px; margin-top: 18px; }
+  .work { display: grid; grid-template-columns: 1.35fr 1fr; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    overflow: hidden; box-shadow: var(--shadow); text-decoration: none; transition: transform .2s ease; }
+  .work .pic { background: #0b0b0d; min-height: 250px; }
   .work .pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .work .text { padding: 26px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
+  .work h3 { margin: 0; font: 600 25px/1.25 var(--serif); }
+  .work h3 small, .mini h3 small { display: block; margin-top: 3px; font: 400 14.5px/1.4 system-ui, sans-serif; color: var(--muted); }
+  .work p { margin: 0; }
   .work.wide { grid-template-columns: 1fr; }
   .work.wide .pic { min-height: 0; aspect-ratio: 3.25 / 1; background: #15130f; }
-  .work .text { padding: 28px 30px 30px; display: flex; flex-direction: column; gap: 10px; }
-  .work h2 {
-    margin: 0; font-size: 26px; line-height: 1.25;
-    font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
-  }
-  .work h2 small { display: block; margin-top: 4px; font: 400 15px/1.4 system-ui, sans-serif; color: var(--muted); }
-  .work p { margin: 0; }
-  .work .zh { color: var(--muted); }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 8px; }
+  .work.wide .text { display: grid; grid-template-columns: 1fr 1.2fr; column-gap: 32px; align-items: start; }
+  .work.wide .text > h3 { grid-row: 1 / span 2; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
   .tags span { font-size: 12.5px; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
   .go { color: var(--accent); font-weight: 600; font-size: 15px; }
-  .work.wide .text { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; align-content: start; }
-  .work.wide .text > h2 { grid-column: 1; }
-  .work.wide .text > p { grid-column: 2; }
-  .work.wide .text > .zh { grid-row: 1; }
-  .work.wide .text > .tags { grid-column: 1; grid-row: 2; align-self: start; margin-top: 0; padding-top: 4px; }
-  .work.wide .text > .go { grid-column: 2; }
 
-  /* a set of smaller works: one heading, a grid of cards */
-  section.set { padding: 4px 0 56px; }
-  .set > h2 { margin: 0; font-size: 24px; line-height: 1.3; font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif; }
-  .set > h2 small { font: 400 15px/1.4 system-ui, sans-serif; color: var(--muted); margin-left: 8px; }
-  .set > .sub { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
-  .minis { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 18px; margin-top: 18px; }
-  .mini {
-    display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    overflow: hidden; box-shadow: var(--shadow); text-decoration: none; transition: transform .2s ease;
-  }
-  .mini:hover { transform: translateY(-2px); }
-  .mini:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  /* small cards */
+  .minis { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; margin-top: 18px; }
+  .mini { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+    box-shadow: var(--shadow); text-decoration: none; transition: transform .2s ease; position: relative; }
   .mini img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #15130f; }
   .mini .t { padding: 12px 14px 14px; }
-  .mini h3 { margin: 0; font-size: 18px; line-height: 1.3; font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif; }
-  .mini h3 small { display: block; margin-top: 2px; font: 400 13px/1.4 system-ui, sans-serif; color: var(--muted); }
+  .mini h3 { margin: 0; font: 600 18px/1.3 var(--serif); }
   .mini p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
-  /* two to a row, larger, pictures 16:9 (a painting beside its callouts) */
   .minis.two { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
   .minis.two img { aspect-ratio: 16 / 9; }
   .minis.two .t { padding: 14px 18px 18px; }
   .minis.two h3 { font-size: 21px; }
   .minis.two .scroll { grid-column: 1 / -1; }
   .minis.two .scroll img { aspect-ratio: 3 / 1; }
-  .set > .also { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
-  .set > .also a { color: var(--accent); text-decoration: none; }
-  .set > .also a:hover { text-decoration: underline; }
+  /* a site with a tour in each language: the switch picks which one opens */
+  .both { position: absolute; top: 10px; right: 10px; font: 600 11.5px/1 system-ui, sans-serif; color: #fff; background: rgba(0, 0, 0, .55);
+    padding: 5px 7px; border-radius: 6px; letter-spacing: .02em; }
+  .work .both { position: static; align-self: flex-start; color: var(--muted); background: none; border: 1px solid var(--line); }
 
-  section.archive { border-top: 1px solid var(--line); padding: 28px 0 8px; }
-  details summary {
-    cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-weight: 600;
-  }
+  .work:hover, .mini:hover { transform: translateY(-2px); }
+  .work:focus-visible, .mini:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  /* search: what does not match is hidden; a section with nothing left, too */
+  [data-hide] { display: none !important; }
+  .found { margin: 10px 0 0; color: var(--muted); font-size: 14.5px; min-height: 1.6em; }
+  .found b { color: var(--ink); }
+  .none { padding: 40px 0 60px; color: var(--muted); }
+
+  section.archive { border-top: 1px solid var(--line); padding: 26px 0 8px; margin-top: 18px; }
+  details summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-weight: 600; }
   details summary::-webkit-details-marker { display: none; }
   details summary::before { content: "▸"; color: var(--muted); transition: transform .15s; display: inline-block; }
   details[open] summary::before { transform: rotate(90deg); }
@@ -108,170 +139,287 @@
   .old a:hover { color: var(--ink); text-decoration: underline; }
   .old b { font-weight: 500; margin-right: 6px; }
   .note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
-
   footer { padding: 36px 0 48px; color: var(--muted); font-size: 13.5px; }
 
+  @media (max-width: 860px) {
+    nav.sections { display: none; }
+    .find { flex: 1; }
+  }
   @media (max-width: 760px) {
-    header { padding: 40px 0 28px; }
+    .bar .wrap { gap: 10px; }
+    .logo span { display: none; }
+    .find kbd { display: none; }
+    header.top { padding: 34px 0 18px; }
     .work, .work.wide .text { grid-template-columns: 1fr; }
     .work .pic { min-height: 0; aspect-ratio: 16 / 10; }
     .work.wide .pic { aspect-ratio: 2.4 / 1; }
-    .work.wide .text > * { grid-column: auto !important; grid-row: auto !important; }
-    .work.wide .text > .tags { padding-top: 8px; }
-    .work .text { padding: 22px 20px 24px; }
+    .work.wide .text > h3 { grid-row: auto; }
+    .work .text { padding: 20px 18px 22px; }
     .minis.two { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) { .work, .mini { transition: none; } .work:hover, .mini:hover { transform: none; } }
 </style>
 </head>
 <body>
+<div class="bar">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="YouData"><i>数</i><span><span class="zh">有数工坊</span><span class="en">YouData</span></span></a>
+    <nav class="sections" aria-label="Sections">
+      <a href="#world"><span class="zh">世界与历史</span><span class="en">World &amp; history</span></a>
+      <a href="#poetry"><span class="zh">诗与书法</span><span class="en">Poetry &amp; calligraphy</span></a>
+      <a href="#paintings"><span class="zh">名画</span><span class="en">Paintings</span></a>
+      <a href="#science"><span class="zh">科学</span><span class="en">Science</span></a>
+    </nav>
+    <div class="find" role="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" aria-label="Search">
+      <kbd>/</kbd>
+      <button class="clear" type="button" hidden aria-label="Clear">×</button>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set="en" lang="en">EN</button>
+      <button type="button" data-set="zh" lang="zh">中</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
-  <header>
-    <div class="brand">有数工坊 · YouData</div>
-    <h1>大图细读 <span>· Pages to zoom into</span></h1>
-    <p class="lede">一张图，从全貌放大到细节：可搜索、可缩放，并附导览。<br>
-      One picture, from the whole down to the detail — search it, zoom into it, or let the tour show you round.</p>
+  <header class="top">
+    <div class="brand"><span class="zh">有数工坊 · YouData</span><span class="en">YouData · 有数工坊</span></div>
+    <h1><span class="zh">大图细读</span><span class="en">Pages to zoom into</span></h1>
+    <p class="lede"><span class="zh">一张图，从全貌放大到细节：可搜索、可缩放，并附导览。每一页都是静态网页，打开即用。</span><span class="en">One picture, from the whole down to the detail: search it, zoom into it, or let the tour show you round. Every page is a plain web page that simply opens.</span></p>
+    <p class="found" id="found" aria-live="polite"></p>
   </header>
 
-  <main class="works">
-    <a class="work" href="/world-atlas/">
-      <div class="pic"><img src="img/world-atlas.webp" width="1060" height="662" alt="Rivers of China coloured by the ocean they reach, over the night lights, with city names"></div>
-      <div class="text">
-        <h2>灯火与河流<small>World atlas — lights, rivers, relief</small></h2>
-        <p>Every light seen from space, every river on Earth, the relief beneath them and the cities they meet — one map to search and zoom.</p>
-        <p class="zh">太空中看到的每一处灯火、地球上的每一条河、地形起伏与沿河城市，同在一张可搜索、可缩放的地图上。</p>
-        <div class="tags"><span>12,000 places</span><span>45 river basins</span><span>中英双语导览</span></div>
-        <span class="go">Open the atlas →</span>
+  <main id="works">
+    <section class="set" id="world">
+      <h2><span class="zh">世界与历史</span><span class="en">The world and its history</span></h2>
+      <p class="sub"><span class="zh">整个地球的灯火、河流与地形，和五千年的国家、君主与人物。</span><span class="en">The whole Earth's lights, rivers and relief, and five thousand years of states, rulers and people.</span></p>
+      <div class="works">
+        <a class="work" href="/world-atlas/" data-k="map cities rivers basins mountains peaks everest night lights relief yangtze amazon 地图 城市 河流 流域 山峰 珠穆朗玛 夜光 地形 长江 黄河">
+          <div class="pic"><img src="img/world-atlas.webp" width="1060" height="662" alt="Rivers of China coloured by the ocean they reach, over the night lights, with city names"></div>
+          <div class="text">
+            <h3><span class="zh">灯火与河流</span><span class="en">World atlas</span><small><span class="zh">世界地图 · 夜光、河流、地形</span><span class="en">Lights, rivers, relief · 灯火与河流</span></small></h3>
+            <p><span class="zh">太空中看到的每一处灯火、地球上的每一条河、地形起伏与沿河城市，同在一张可搜索、可缩放的地图上。</span><span class="en">Every light seen from space, every river on Earth, the relief beneath them and the cities they meet: one map to search and zoom.</span></p>
+            <div class="tags"><span><span class="zh">一万二千个地点</span><span class="en">12,000 places</span></span><span><span class="zh">45 个流域</span><span class="en">45 river basins</span></span><span><span class="zh">中英双语导览</span><span class="en">Tours in English and Chinese</span></span></div>
+            <span class="go"><span class="zh">打开地图 →</span><span class="en">Open the atlas →</span></span>
+          </div>
+        </a>
+        <a class="work" href="/world-history/" data-k="timeline history empires dynasties kings emperors wars rome china italy renaissance leonardo michelangelo columbus galileo wikidata 历史 时间轴 朝代 帝国 君主 皇帝 战争 人物">
+          <div class="pic"><img src="img/world-history.webp" width="1060" height="760" alt="A timeline of Italy 1440–1610: its states and wars, and portraits of Leonardo, Michelangelo, Columbus and Galileo along their lives" loading="lazy"></div>
+          <div class="text">
+            <h3><span class="zh">世界历史</span><span class="en">World history</span><small><span class="zh">一条可缩放的时间轴</span><span class="en">A timeline to zoom into · 世界历史</span></small></h3>
+            <p><span class="zh">从公元前3200年到今天，国家、君主、事件与人物共188,530条，按世界八大地区分27行排列。放大任一时代，名字随之展开；人物可显示为肖像，可用中文或英文查找。</span><span class="en">188,530 states, rulers, events and people from 3200 BCE to today, in 27 lanes across eight regions of the world. Zoom into any era and its names open up; show the people as portraits, and find anyone in English or Chinese.</span></p>
+            <div class="tags"><span><span class="zh">188,530 条目</span><span class="en">188,530 entries</span></span><span><span class="zh">公元前3200年至今</span><span class="en">3200 BCE to today</span></span><span><span class="zh">中英双语</span><span class="en">English and Chinese</span></span></div>
+            <span class="go"><span class="zh">打开时间轴 →</span><span class="en">Open the timeline →</span></span>
+          </div>
+        </a>
       </div>
-    </a>
+    </section>
 
-    <a class="work" href="/world-history/">
-      <div class="pic"><img src="img/world-history.webp" width="1060" height="760" alt="A timeline of Italy 1440–1610: its states and wars, and portraits of Leonardo, Michelangelo, Columbus and Galileo along their lives"></div>
-      <div class="text">
-        <h2>世界历史<small>World history — a zoomable timeline</small></h2>
-        <p>188,530 states, rulers, events and people from 3200 BCE to today, in 27 lanes across eight regions of the world. Zoom into any era and its names open up; show the people as portraits, and find anyone in English or Chinese.</p>
-        <p class="zh">从公元前3200年到今天，国家、君主、事件与人物共188,530条，按世界八大地区分27行排列。放大任一时代，名字随之展开；人物可显示为肖像，可用中文或英文查找。</p>
-        <div class="tags"><span>188,530 条目</span><span>公元前3200年至今</span><span>中英双语</span></div>
-        <span class="go">打开时间轴 →</span>
+    <section class="set" id="poetry">
+      <h2><span class="zh">诗与书法</span><span class="en">Poetry and calligraphy</span></h2>
+      <p class="sub"><span class="zh">三十四万首诗词按诗意排布；名帖从卷首到卷尾逐列释读，可放大到一笔一画。</span><span class="en">340,000 poems placed by what they say; great handscrolls read column by column from end to end, down to a single stroke.</span></p>
+      <div class="works">
+        <a class="work" href="/poetry-atlas/" data-k="poems poetry tang song yuan shi ci qu li bai du fu su shi li qingzhao wang wei 诗 词 曲 唐诗 宋词 元曲 李白 杜甫 苏轼 李清照 王维 白居易">
+          <div class="pic"><img src="img/poetry-atlas.webp" width="1059" height="662" alt="Chinese poems as coloured dots in discs within discs, each disc a named theme" loading="lazy"></div>
+          <div class="text">
+            <h3><span class="zh">诗词图谱</span><span class="en">An atlas of Chinese poems</span><small><span class="zh">唐宋诗 · 宋词 · 元曲</span><span class="en">Tang and Song shi, Song ci, Yuan qu · 诗词图谱</span></small></h3>
+            <p><span class="zh">唐宋诗、宋词、元曲三十四万首，一首一点，按诗意排布；圈中有圈，主题套主题，放大即见细分。可按题目、作者或首句找诗。</span><span class="en">340,195 Tang and Song shi, Song ci and Yuan qu, each a dot, placed by what it says. Discs inside discs are themes inside themes: zoom in and the smaller ones are named. Find a poem by its title, its poet or its first words.</span></p>
+            <div class="tags"><span><span class="zh">340,195 首</span><span class="en">340,195 poems</span></span><span><span class="zh">1,216 个主题</span><span class="en">1,216 themes</span></span><span><span class="zh">按题目或作者找诗</span><span class="en">Find by title or poet</span></span></div>
+            <span class="go"><span class="zh">打开图谱 →</span><span class="en">Open the atlas →</span></span>
+          </div>
+        </a>
+        <a class="work wide" href="/hanshi-tie/" data-k="su shi cold food scroll calligraphy running script huang tingjian qianlong taipei palace museum 苏轼 寒食帖 黄州 行书 黄庭坚 乾隆 台北故宫">
+          <div class="pic"><img src="img/hanshi-tie.webp" width="1600" height="492" alt="Su Shi's Cold Food scroll with Huang Tingjian's colophon and the Qianlong frontispiece, annotated" loading="lazy"></div>
+          <div class="text">
+            <h3><span class="zh">苏轼 · 黄州寒食诗帖</span><span class="en">Su Shi · The Cold Food Observance</span><small><span class="zh">人称“天下第三行书”</span><span class="en">Called the third-greatest running script under heaven</span></small></h3>
+            <p><span class="zh">从卷首到卷尾展开：本幅十七列逐列释文，黄庭坚跋、乾隆御笔引首一一注解。</span><span class="en">Unrolled end to end: the poem's seventeen columns transcribed one by one, Huang Tingjian's colophon and the Qianlong frontispiece annotated.</span></p>
+            <div class="tags"><span><span class="zh">台北故宫博物院藏</span><span class="en">National Palace Museum, Taipei</span></span><span><span class="zh">逐列释文</span><span class="en">Read column by column</span></span></div>
+          </div>
+        </a>
       </div>
-    </a>
+      <div class="minis">
+        <a class="mini" href="/lanting-xu/" data-k="wang xizhi lanting orchid pavilion shenlong 王羲之 兰亭 神龙本 行书">
+          <img src="img/lanting-xu.webp" width="640" height="400" alt="The Shenlong copy of the Orchid Pavilion Preface, columns with their readings" loading="lazy">
+          <div class="t"><h3><span class="zh">王羲之 · 兰亭集序</span><span class="en">Wang Xizhi · Orchid Pavilion Preface</span><small><span class="zh">神龙本</span><span class="en">The Shenlong copy</span></small></h3>
+            <p><span class="zh">二十八列逐列释文，二十个「之」字一一标出。</span><span class="en">Its 28 columns read one by one, and all twenty of its 之 marked.</span></p></div></a>
+        <a class="mini" href="/gushi-sitie/" data-k="zhang xu cursive wild four ancient poems 张旭 狂草 古诗四帖 草书">
+          <img src="img/gushi-sitie.webp" width="640" height="400" alt="The opening of the cursive scroll Four Ancient Poems" loading="lazy">
+          <div class="t"><h3><span class="zh">张旭（传）· 古诗四帖</span><span class="en">Zhang Xu (attr.) · Four Ancient Poems</span><small><span class="zh">狂草长卷</span><span class="en">A scroll in wild cursive</span></small></h3>
+            <p><span class="zh">三张照片拼成一卷狂草，四首诗与历代题跋原文。</span><span class="en">One scroll joined from three photographs: the four poems and the colophons written on it through the ages.</span></p></div></a>
+        <a class="mini" href="/jizhi-gao/" data-k="yan zhenqing requiem nephew draft 颜真卿 祭侄文稿 行书 涂改">
+          <img src="img/jizhi-gao.webp" width="640" height="400" alt="Yan Zhenqing's draft with its struck-out characters circled" loading="lazy">
+          <div class="t"><h3><span class="zh">颜真卿 · 祭侄文稿</span><span class="en">Yan Zhenqing · Requiem to My Nephew</span><small><span class="zh">天下第二行书</span><span class="en">A draft, crossings-out and all</span></small></h3>
+            <p><span class="zh">二十四列逐列释读，涂改与旁添一一标出，及历代题跋。</span><span class="en">Its 24 columns read one by one, every word struck out or added marked, with the colophons.</span></p></div></a>
+        <a class="mini" href="/su-shi-chibi/" data-k="su shi red cliff ode wen zhengming 苏轼 赤壁赋 文徵明">
+          <img src="img/su-shi-chibi.webp" width="640" height="400" alt="Su Shi's brushwork close up in the Ode on the Red Cliff" loading="lazy">
+          <div class="t"><h3><span class="zh">苏轼 · 赤壁赋</span><span class="en">Su Shi · Ode on the Red Cliff</span><small><span class="zh">台北故宫博物院藏</span><span class="en">In his own hand</span></small></h3>
+            <p><span class="zh">五十一列逐列释文，卷首文徵明补书三十六字。</span><span class="en">Its 51 columns read one by one; the 36 characters at its head were added by Wen Zhengming.</span></p></div></a>
+        <a class="mini" href="/su-shi-dongting/" data-k="su shi dongting spring wine zhongshan pine ode 苏轼 洞庭春色赋 中山松醪赋 酒">
+          <img src="img/su-shi-dongting.webp" width="640" height="400" alt="Su Shi's running script close up in the Ode to Dongting Spring Wine" loading="lazy">
+          <div class="t"><h3><span class="zh">苏轼 · 洞庭春色赋 · 中山松醪赋</span><span class="en">Su Shi · Two odes on wine</span><small><span class="zh">吉林省博物院藏</span><span class="en">Dongting Spring and Zhongshan Pine Wine</span></small></h3>
+            <p><span class="zh">两篇酒赋七十七列逐列释文，一〇九四年南迁途中自跋。</span><span class="en">Two odes, 77 columns read one by one, with his own colophon written on the road south in 1094.</span></p></div></a>
+        <a class="mini" href="/su-shi-letters/" data-k="su shi letters zhiping duhai 苏轼 尺牍 治平帖 渡海帖 新岁展庆帖">
+          <img src="img/su-shi-letters.webp" width="640" height="400" alt="Su Shi's letter Xin sui zhan qing tie close up, with its collectors' seals" loading="lazy">
+          <div class="t"><h3><span class="zh">苏轼 · 尺牍里的一生</span><span class="en">Su Shi · A life in letters</span><small><span class="zh">五件墨迹</span><span class="en">Five letters in his own hand</span></small></h3>
+            <p><span class="zh">五件墨迹，同一比例，从治平帖到渡海帖。</span><span class="en">Five letters at one scale, from the Zhiping letter to the one written as he crossed the sea.</span></p></div></a>
+        <a class="mini" href="/zhao-chibi-qian/" data-k="zhao mengfu red cliff former ode portrait su shi 赵孟頫 前赤壁赋 东坡像">
+          <img src="img/zhao-chibi-qian.webp" width="640" height="400" alt="Zhao Mengfu's portrait of Su Shi at the head of the Former Ode on the Red Cliff" loading="lazy">
+          <div class="t"><h3><span class="zh">赵孟頫 · 行书前赤壁赋</span><span class="en">Zhao Mengfu · Former Ode on the Red Cliff</span><small><span class="zh">卷首东坡像</span><span class="en">With his portrait of Su Shi</span></small></h3>
+            <p><span class="zh">卷首自画东坡像，四十五列逐列释文。</span><span class="en">His own portrait of Su Shi at the head, and 45 columns read one by one.</span></p></div></a>
+        <a class="mini" href="/zhao-chibi-hou/" data-k="zhao mengfu red cliff latter ode xianyu shu 赵孟頫 后赤壁赋 鲜于枢">
+          <img src="img/zhao-chibi-hou.webp" width="640" height="400" alt="Zhao Mengfu's Latter Ode on the Red Cliff, columns with their readings" loading="lazy">
+          <div class="t"><h3><span class="zh">赵孟頫 · 行书后赤壁赋</span><span class="en">Zhao Mengfu · Latter Ode on the Red Cliff</span><small><span class="zh">及题跋</span><span class="en">With its colophons</span></small></h3>
+            <p><span class="zh">三十一列逐列释文，及鲜于枢等人题跋。</span><span class="en">31 columns read one by one, with colophons by Xianyu Shu and others.</span></p></div></a>
+      </div>
+    </section>
 
-    <a class="work" href="/poetry-atlas/">
-      <div class="pic"><img src="img/poetry-atlas.webp" width="1059" height="662" alt="Chinese poems as coloured dots in discs within discs, each disc a named theme"></div>
-      <div class="text">
-        <h2>诗词图谱<small>An atlas of Chinese poems</small></h2>
-        <p>340,195 Tang and Song shi, Song ci and Yuan qu, each a dot, placed by what it says. Discs inside discs are themes inside themes — zoom in and the smaller ones are named.</p>
-        <p class="zh">唐宋诗、宋词、元曲三十四万首，一首一点，按诗意排布；圈中有圈，主题套主题，放大即见细分。可按题目、作者或首句找诗。</p>
-        <div class="tags"><span>340,195 首</span><span>1,216 个主题</span><span>按题目或作者找诗</span></div>
-        <span class="go">打开图谱 →</span>
+    <section class="set" id="paintings">
+      <h2><span class="zh">名画细读</span><span class="en">Paintings, detail by detail</span></h2>
+      <p class="sub"><span class="zh">张择端的长卷与达芬奇的两幅画，原图放大到细节，逐段讲解，附导览。</span><span class="en">Zhang Zeduan's handscroll and two of Leonardo's paintings at full resolution, their details called out, each with a tour.</span></p>
+      <div class="minis two">
+        <a class="mini scroll" href="/qingming-shanghe-zh/" data-href-en="/qingming-shanghe/" data-href-zh="/qingming-shanghe-zh/" data-k="qingming along the river zhang zeduan rainbow bridge kaifeng song palace museum beijing 清明上河图 张择端 虹桥 汴京 北宋 故宫">
+          <img src="img/qingming-shanghe.webp" width="2100" height="700" alt="The Rainbow Bridge in Along the River during the Qingming Festival: a crowd on the arch, stalls at its foot, a boat lowering its mast below" loading="lazy">
+          <span class="both">EN · 中</span>
+          <div class="t"><h3><span class="zh">清明上河图</span><span class="en">Along the River during the Qingming Festival</span><small><span class="zh">张择端 · 北京故宫博物院藏</span><span class="en">Zhang Zeduan · Palace Museum, Beijing</span></small></h3>
+            <p><span class="zh">五米多的长卷从右往左读：郊野、漕船、虹桥、街市、城门与城内，一段段放大细看。</span><span class="en">A scroll over five metres long, read from right to left: the countryside, the grain boats, the Rainbow Bridge, the streets, the city gate and the city inside, section by section.</span></p></div></a>
+        <a class="mini" href="/leonardo-mona-lisa/" data-k="leonardo da vinci mona lisa gioconda louvre smile 达芬奇 蒙娜丽莎 卢浮宫 微笑">
+          <img src="img/leonardo-mona-lisa.webp" width="1060" height="596" alt="The Mona Lisa with callouts: the crack, the eyebrows, the smile, the winding road, the bridge" loading="lazy">
+          <div class="t"><h3><span class="zh">蒙娜丽莎</span><span class="en">Mona Lisa</span><small><span class="zh">达芬奇 · 卢浮宫藏</span><span class="en">Leonardo da Vinci · Louvre</span></small></h3>
+            <p><span class="zh">放大到裂纹、眉毛、微笑与远处的桥；她是谁、1911 年的失窃、清漆之下的画层。</span><span class="en">Down to the crack, the eyebrows, the smile and the far bridge; who she was, the theft of 1911, and the layers under the varnish.</span></p></div></a>
+        <a class="mini" href="/leonardo-saint-anne/" data-k="leonardo da vinci virgin child saint anne louvre freud vulture 达芬奇 圣母子与圣安妮 卢浮宫 弗洛伊德">
+          <img src="img/leonardo-saint-anne.webp" width="1060" height="596" alt="The Virgin and Child with Saint Anne with callouts: the blue distance, Saint Anne, Mary, the tree, Freud's vulture, the Child and lamb" loading="lazy">
+          <div class="t"><h3><span class="zh">圣母子与圣安妮</span><span class="en">The Virgin and Child with Saint Anne</span><small><span class="zh">达芬奇 · 卢浮宫藏</span><span class="en">Leonardo da Vinci · Louvre</span></small></h3>
+            <p><span class="zh">从远山、圣安妮、未完成的玛利亚头像到弗洛伊德的「秃鹫」；草图与其他版本，2011–12 年的修复。</span><span class="en">From the blue mountains, Saint Anne and Mary's unfinished head to Freud's "vulture"; the drawings, the other versions, and the restoration of 2011–12.</span></p></div></a>
       </div>
-    </a>
+    </section>
 
-    <a class="work wide" href="/hanshi-tie/">
-      <div class="pic"><img src="img/hanshi-tie.webp" width="1600" height="492" alt="Su Shi's Cold Food scroll with Huang Tingjian's colophon and the Qianlong frontispiece, annotated"></div>
-      <div class="text">
-        <h2>苏轼 · 黄州寒食诗帖<small>Su Shi's Cold Food Observance scroll</small></h2>
-        <p class="zh">人称“天下第三行书”。从卷首到卷尾展开：本幅十七列逐列释文，黄庭坚跋、乾隆御笔引首一一注解。</p>
-        <p>Called the third-greatest running script under heaven, unrolled end to end: the poem's seventeen columns transcribed one by one, Huang Tingjian's colophon and the Qianlong frontispiece annotated.</p>
-        <div class="tags"><span>台北故宫博物院藏</span><span>deep zoom</span><span>逐列释文</span></div>
-        <span class="go">展开长卷 →</span>
+    <section class="set" id="science">
+      <h2><span class="zh">科学大图</span><span class="en">Science at full zoom</span></h2>
+      <p class="sub"><span class="zh">从星系、银河、月球、火星到蛋白质、病理切片、淋巴结与心脏再生研究，一张大图放大到细节，附导览。</span><span class="en">From a galaxy and the Milky Way to the Moon, Mars, the proteins of life, a pathology slide, a lymph node cell by cell and the research on regrowing the heart: one picture from the whole down to the detail, each with a tour.</span></p>
+      <div class="minis">
+        <a class="mini" href="/andromeda-zh/" data-href-en="/andromeda/" data-href-zh="/andromeda-zh/" data-k="andromeda galaxy m31 hubble phat stars dust space astronomy 仙女座 星系 哈勃 天文">
+          <img src="img/andromeda.webp" width="640" height="400" alt="A lane of dust and stars in the Andromeda Galaxy, from Hubble's PHAT mosaic" loading="lazy">
+          <span class="both">EN · 中</span>
+          <div class="t"><h3><span class="zh">仙女座星系</span><span class="en">Andromeda</span><small><span class="zh">哈勃最清晰的一瞥</span><span class="en">In Hubble's sharpest view</span></small></h3>
+            <p><span class="zh">哈勃拼接图里三分之一个仙女座星系，从核球、尘埃带到外盘。</span><span class="en">One third of the Andromeda Galaxy in Hubble's mosaic, from the bulge across the lanes of dust to the outer disc.</span></p></div></a>
+        <a class="mini" href="/gaia-milky-way/" data-k="milky way gaia dr3 stars sky galactic centre nebula astronomy 银河 盖亚 星空 银心 星云 天文">
+          <img src="img/gaia-milky-way.webp" width="640" height="400" alt="The centre of the Milky Way in Gaia's star density, with the Galactic centre, the Lagoon Nebula and the Pipe Nebula named" loading="lazy">
+          <div class="t"><h3><span class="zh">银河全景</span><span class="en">The Milky Way</span><small><span class="zh">盖亚眼中的银河</span><span class="en">As Gaia sees it</span></small></h3>
+            <p><span class="zh">Gaia DR3 四百万颗星画出的全天，与所有亮于 G = 11 的星，两图切换。</span><span class="en">The whole sky drawn from four million Gaia DR3 stars, and every star brighter than G = 11: two pictures to switch between.</span></p></div></a>
+        <a class="mini" href="/moon-zh/" data-href-en="/moon/" data-href-zh="/moon-zh/" data-k="moon lunar lro apollo luna chang'e change yutu lunokhod craters maria far side south pole tycho copernicus 月球 月面 阿波罗 嫦娥 玉兔 月海 环形山 远侧 南极">
+          <img src="img/moon.webp" width="640" height="400" alt="The near side of the Moon from LRO's wide-angle camera: Copernicus and its rays, Kepler, and the edge of Mare Imbrium" loading="lazy">
+          <span class="both">EN · 中</span>
+          <div class="t"><h3><span class="zh">月球全图</span><span class="en">The whole Moon</span><small><span class="zh">和人类探测器到过的每一处</span><span class="en">And every place a spacecraft reached</span></small></h3>
+            <p><span class="zh">LRO 每像素百米的整个月球，与 74 处探测器着陆或撞击的地点（1959 至今）；可查探测器、月海、环形山，切换高程图。</span><span class="en">The whole Moon at 100 m a pixel, and the 74 places spacecraft landed or crashed since 1959; find a mission, a sea or a crater, or switch to the height map.</span></p></div></a>
+        <a class="mini" href="/mars-jezero/" data-k="mars perseverance rover jezero crater delta samples sol nasa 火星 毅力号 耶泽罗 陨石坑 样本">
+          <img src="img/mars-jezero.webp" width="640" height="400" alt="Perseverance's route across the delta front in Jezero crater, with its sample sites and the sols" loading="lazy">
+          <div class="t"><h3><span class="zh">毅力号之路</span><span class="en">Perseverance's road</span><small><span class="zh">火星耶泽罗陨石坑</span><span class="en">Jezero crater, Mars</span></small></h3>
+            <p><span class="zh">耶泽罗陨石坑里毅力号逐次行驶的路线与 28 个岩土样本；可查样本、地名或火星日。</span><span class="en">Perseverance's route drive by drive across Jezero crater, and its 28 rock and soil samples; find a sample, a place or a sol.</span></p></div></a>
+        <a class="mini" href="/protein-universe/" data-k="protein universe alphafold uniprot clusters families network rubisco 蛋白质 宇宙 蛋白家族 结构">
+          <img src="img/protein-universe.webp" width="640" height="400" alt="Part of the protein universe network coloured by kingdom, with protein communities named" loading="lazy">
+          <div class="t"><h3><span class="zh">蛋白质宇宙</span><span class="en">The protein universe</span><small><span class="zh">AlphaFold 蛋白质簇</span><span class="en">AlphaFold's protein clusters</span></small></h3>
+            <p><span class="zh">四百二十七万个 AlphaFold 蛋白质簇按序列相似连成网络，六种着色；可查蛋白家族或 UniProt 编号。</span><span class="en">4.27 million AlphaFold protein clusters joined by how alike their sequences are, in six colourings; find a protein family or a UniProt ID.</span></p></div></a>
+        <a class="mini" href="/pathology-slide/" data-k="pathology slide camelyon breast cancer metastasis lymph node h&e histology tumour tumor 病理 切片 乳腺癌 转移 淋巴结 肿瘤">
+          <img src="img/pathology-slide.webp" width="640" height="400" alt="A stained lymph node slide with the outlines of breast cancer metastases and their sizes, from 270 µm to 8.5 mm" loading="lazy">
+          <div class="t"><h3><span class="zh">淋巴结切片</span><span class="en">A lymph node slide</span><small><span class="zh">CAMELYON16 · 乳腺癌转移</span><span class="en">CAMELYON16 · breast cancer that spread</span></small></h3>
+            <p><span class="zh">一张十八亿像素的 H&amp;E 切片，病理医生勾画的 69 处乳腺癌转移按大小分级；可查每一处，放大到细胞。</span><span class="en">One 1.8-gigapixel H&amp;E slide and the 69 breast cancer metastases pathologists outlined on it, by size; find each one and zoom down to its cells.</span></p></div></a>
+        <a class="mini" href="/lymph-node/" data-k="lymph node xenium spatial single cell genes b cells t cells germinal centre immune 淋巴结 空间转录组 单细胞 基因 生发中心 免疫">
+          <img src="img/lymph-node.webp" width="640" height="400" alt="A lymph node mapped cell by cell: blue B-cell follicles, the red T-cell zone between them, and a germinal centre" loading="lazy">
+          <div class="t"><h3><span class="zh">淋巴结</span><span class="en">Inside a lymph node</span><small><span class="zh">10x Xenium · 逐个细胞</span><span class="en">Cell by cell, 10x Xenium</span></small></h3>
+            <p><span class="zh">一片淋巴结的七十万个细胞逐个测序着色，可切换 H&amp;E、细胞类型与六个标记基因；可查生发中心与各类细胞。</span><span class="en">700,000 cells of one lymph node slice, each read and coloured; switch between the H&amp;E, cell types and six marker genes, and find its germinal centres and cell types.</span></p></div></a>
+        <a class="mini" href="/heart-regen/" data-k="heart regeneration cardiomyocyte zebrafish research papers literature openalex doi 心脏 再生 心肌细胞 斑马鱼 文献 论文">
+          <img src="img/heart-regen.webp" width="1060" height="662" alt="Research papers on heart regeneration as coloured dots, grouped by topic" loading="lazy">
+          <div class="t"><h3><span class="zh">心脏再生文献图</span><span class="en">Regrowing the heart</span><small><span class="zh">一张研究地图</span><span class="en">A map of the research</span></small></h3>
+            <p><span class="zh">12,185 篇心脏再生研究论文，一篇一点，按标题与摘要的用词排布；可按标题或 DOI 查找，点任一点即见出处与链接。</span><span class="en">12,185 papers on heart regeneration, one dot each, placed by the words of their titles and abstracts; find any by title or DOI, or click a dot for its card and link.</span></p></div></a>
       </div>
-    </a>
+    </section>
   </main>
 
-  <section class="set" aria-labelledby="scrolls">
-    <h2 id="scrolls">书法长卷<small>Calligraphy handscrolls</small></h2>
-    <p class="sub">名帖逐列释读，可放大到一笔一画，并附导览。 — Great scrolls read column by column, down to a single stroke, each with a tour.</p>
-    <div class="minis">
-      <a class="mini" href="/lanting-xu/"><img src="img/lanting-xu.webp" width="640" height="400" alt="The Shenlong copy of the Orchid Pavilion Preface, columns with their readings" loading="lazy">
-        <div class="t"><h3>王羲之 · 兰亭集序<small>Orchid Pavilion Preface · Shenlong copy</small></h3><p>神龙本，二十八列逐列释文，二十个「之」字一一标出。</p></div></a>
-      <a class="mini" href="/gushi-sitie/"><img src="img/gushi-sitie.webp" width="640" height="400" alt="The opening of the cursive scroll Four Ancient Poems" loading="lazy">
-        <div class="t"><h3>张旭（传）· 古诗四帖<small>Four Ancient Poems</small></h3><p>三张照片拼成一卷狂草，四首诗与历代题跋原文。</p></div></a>
-      <a class="mini" href="/jizhi-gao/"><img src="img/jizhi-gao.webp" width="640" height="400" alt="Yan Zhenqing's draft with its struck-out characters circled" loading="lazy">
-        <div class="t"><h3>颜真卿 · 祭侄文稿<small>Draft of a Requiem to My Nephew</small></h3><p>二十四列逐列释读，涂改与旁添一一标出，及历代题跋。</p></div></a>
-      <a class="mini" href="/su-shi-chibi/"><img src="img/su-shi-chibi.webp" width="640" height="400" alt="Su Shi's brushwork close up in the Ode on the Red Cliff" loading="lazy">
-        <div class="t"><h3>苏轼 · 赤壁赋<small>Ode on the Red Cliff</small></h3><p>五十一列逐列释文，卷首文徵明补书三十六字。</p></div></a>
-      <a class="mini" href="/su-shi-dongting/"><img src="img/su-shi-dongting.webp" width="640" height="400" alt="Su Shi's running script close up in the Ode to Dongting Spring Wine" loading="lazy">
-        <div class="t"><h3>苏轼 · 洞庭春色赋 · 中山松醪赋<small>Two odes on wine</small></h3><p>两篇酒赋七十七列逐列释文，一〇九四年南迁途中自跋。</p></div></a>
-      <a class="mini" href="/su-shi-letters/"><img src="img/su-shi-letters.webp" width="640" height="400" alt="Su Shi's letter Xin sui zhan qing tie close up, with its collectors' seals" loading="lazy">
-        <div class="t"><h3>苏轼 · 尺牍里的一生<small>A life in his own hand</small></h3><p>五件墨迹，同一比例，从治平帖到渡海帖。</p></div></a>
-      <a class="mini" href="/zhao-chibi-qian/"><img src="img/zhao-chibi-qian.webp" width="640" height="400" alt="Zhao Mengfu's portrait of Su Shi at the head of the Former Ode on the Red Cliff" loading="lazy">
-        <div class="t"><h3>赵孟頫 · 行书前赤壁赋<small>Former Ode on the Red Cliff</small></h3><p>卷首自画东坡像，四十五列逐列释文。</p></div></a>
-      <a class="mini" href="/zhao-chibi-hou/"><img src="img/zhao-chibi-hou.webp" width="640" height="400" alt="Zhao Mengfu's Latter Ode on the Red Cliff, columns with their readings" loading="lazy">
-        <div class="t"><h3>赵孟頫 · 行书后赤壁赋<small>Latter Ode on the Red Cliff</small></h3><p>三十一列逐列释文，及鲜于枢等人题跋。</p></div></a>
-    </div>
-  </section>
-
-  <section class="set" aria-labelledby="paintings">
-    <h2 id="paintings">名画细读<small>Paintings, detail by detail</small></h2>
-    <p class="sub">张择端的长卷与达芬奇的两幅画，原图放大到细节，逐段讲解，附导览。 — Zhang Zeduan's handscroll and two of Leonardo's paintings at full resolution, their details called out, each with a tour.</p>
-    <div class="minis two">
-      <a class="mini scroll" href="/qingming-shanghe-zh/"><img src="img/qingming-shanghe.webp" width="2100" height="700" alt="The Rainbow Bridge in Along the River during the Qingming Festival: a crowd on the arch, stalls at its foot, a boat lowering its mast below" loading="lazy">
-        <div class="t"><h3>清明上河图<small>Zhang Zeduan · Along the River during the Qingming Festival · Palace Museum, Beijing</small></h3><p>五米多的长卷从右往左读：郊野、漕船、虹桥、街市、城门与城内，一段段放大细看，中文解说。</p></div></a>
-      <a class="mini" href="/leonardo-mona-lisa/"><img src="img/leonardo-mona-lisa.webp" width="1060" height="596" alt="The Mona Lisa with callouts: the crack, the eyebrows, the smile, the winding road, the bridge" loading="lazy">
-        <div class="t"><h3>蒙娜丽莎<small>Leonardo da Vinci · Mona Lisa · Louvre</small></h3><p>放大到裂纹、眉毛、微笑与远处的桥；她是谁、1911 年的失窃、清漆之下的画层。</p></div></a>
-      <a class="mini" href="/leonardo-saint-anne/"><img src="img/leonardo-saint-anne.webp" width="1060" height="596" alt="The Virgin and Child with Saint Anne with callouts: the blue distance, Saint Anne, Mary, the tree, Freud's vulture, the Child and lamb" loading="lazy">
-        <div class="t"><h3>圣母子与圣安妮<small>Leonardo da Vinci · The Virgin and Child with Saint Anne · Louvre</small></h3><p>从远山、圣安妮、未完成的玛利亚头像到弗洛伊德的「秃鹫」；草图与其他版本，2011–12 年的修复。</p></div></a>
-    </div>
-    <p class="also">清明上河图另有英文解说版 · Along the River with an English tour: <a href="/qingming-shanghe/">youdata.github.io/qingming-shanghe →</a></p>
-  </section>
-
-  <section class="set" aria-labelledby="science">
-    <h2 id="science">科学大图<small>Science at full zoom</small></h2>
-    <p class="sub">从星系、银河、月球、火星到蛋白质、病理切片与淋巴结，一张大图放大到细节，附导览。 — From a galaxy and the Milky Way to the Moon, Mars, the proteins of life, a pathology slide and a lymph node cell by cell, one picture from the whole down to the detail, each with a tour.</p>
-    <div class="minis">
-      <a class="mini" href="/andromeda-zh/"><img src="img/andromeda.webp" width="640" height="400" alt="A lane of dust and stars in the Andromeda Galaxy, from Hubble's PHAT mosaic" loading="lazy">
-        <div class="t"><h3>仙女座星系<small>Andromeda in Hubble's sharpest view</small></h3><p>哈勃拼接图里三分之一个仙女座星系，从核球、尘埃带到外盘，中文解说。</p></div></a>
-      <a class="mini" href="/gaia-milky-way/"><img src="img/gaia-milky-way.webp" width="640" height="400" alt="The centre of the Milky Way in Gaia's star density, with the Galactic centre, the Lagoon Nebula and the Pipe Nebula named" loading="lazy">
-        <div class="t"><h3>银河全景<small>The Milky Way as Gaia sees it</small></h3><p>Gaia DR3 四百万颗星画出的全天，与所有亮于 G = 11 的星，两图切换。</p></div></a>
-      <a class="mini" href="/moon-zh/"><img src="img/moon.webp" width="640" height="400" alt="The near side of the Moon from LRO's wide-angle camera: Copernicus and its rays, Kepler, and the edge of Mare Imbrium" loading="lazy">
-        <div class="t"><h3>月球全图<small>The whole Moon, and every landing</small></h3><p>LRO 每像素百米的整个月球，与 74 处探测器着陆或撞击的地点（1959 至今）；可查探测器、月海、环形山，切换高程图，中文导览。</p></div></a>
-      <a class="mini" href="/mars-jezero/"><img src="img/mars-jezero.webp" width="640" height="400" alt="Perseverance's route across the delta front in Jezero crater, with its sample sites and the sols" loading="lazy">
-        <div class="t"><h3>毅力号之路<small>Perseverance's road on Mars</small></h3><p>耶泽罗陨石坑里毅力号逐次行驶的路线与 28 个岩土样本；可查样本、地名或火星日。</p></div></a>
-      <a class="mini" href="/protein-universe/"><img src="img/protein-universe.webp" width="640" height="400" alt="Part of the protein universe network coloured by kingdom, with protein communities named" loading="lazy">
-        <div class="t"><h3>蛋白质宇宙<small>The protein universe</small></h3><p>四百二十七万个 AlphaFold 蛋白质簇按序列相似连成网络，六种着色；可查蛋白家族或 UniProt 编号。</p></div></a>
-      <a class="mini" href="/pathology-slide/"><img src="img/pathology-slide.webp" width="640" height="400" alt="A stained lymph node slide with the outlines of breast cancer metastases and their sizes, from 270 µm to 8.5 mm" loading="lazy">
-        <div class="t"><h3>淋巴结切片<small>A lymph node slide</small></h3><p>CAMELYON16 一张十八亿像素的 H&amp;E 切片，病理医生勾画的 69 处乳腺癌转移按大小分级；可查每一处，放大到细胞。</p></div></a>
-      <a class="mini" href="/lymph-node/"><img src="img/lymph-node.webp" width="640" height="400" alt="A lymph node mapped cell by cell: blue B-cell follicles, the red T-cell zone between them, and a germinal centre" loading="lazy">
-        <div class="t"><h3>淋巴结<small>Inside a lymph node</small></h3><p>一片淋巴结的七十万个细胞逐个测序着色（10x Xenium），可切换 H&amp;E、细胞类型与六个标记基因；可查生发中心与各类细胞。</p></div></a>
-    </div>
-    <p class="also">仙女座、月球另有英文版 · Andromeda with an English tour: <a href="/andromeda/">youdata.github.io/andromeda →</a> · The Moon in English: <a href="/moon/">youdata.github.io/moon →</a></p>
-  </section>
-
-  <div class="works">
-    <a class="work" href="/heart-regen/">
-      <div class="pic"><img src="img/heart-regen.webp" width="1060" height="662" alt="Research papers on heart regeneration as coloured dots, grouped by topic: cardiomyocyte proliferation, zebrafish, inflammation, cell therapy"></div>
-      <div class="text">
-        <h2>心脏再生文献图<small>Regrowing the heart — a map of the research</small></h2>
-        <p>12,185 research papers on heart regeneration, one dot each, placed by the words in their titles and abstracts — similar papers sit together. Find any paper by title or DOI, or click a dot for its card and a link to it.</p>
-        <p class="zh">一万二千余篇心脏再生研究论文，一篇一点，按标题与摘要的用词排布，相近的论文聚在一起。可按标题或 DOI 查找，点任一点即见其出处与链接。</p>
-        <div class="tags"><span>12,185 papers</span><span>14 topics</span><span>OpenAlex</span></div>
-        <span class="go">Open the map →</span>
-      </div>
-    </a>
-  </div>
+  <p class="none" id="none" hidden><span class="zh">没有找到。试试别的词，或用英文搜索。</span><span class="en">Nothing found. Try another word, or search in Chinese.</span></p>
 
   <section class="archive">
     <details>
-      <summary>旧作 · Archive <small>早期的小应用，已不再维护 — early apps, no longer maintained</small></summary>
+      <summary><span class="zh">旧作</span><span class="en">Archive</span> <small><span class="zh">早期的小应用，已不再维护</span><span class="en">early apps, no longer maintained</span></small></summary>
       <ul class="old">
-        <li><a href="/zi/"><b>识字</b>Learning characters</a></li>
-        <li><a href="/tuwen/"><b>诗图</b>Poems as pictures</a></li>
-        <li><a href="/icon/"><b>汉字图标</b>Character icons</a></li>
-        <li><a href="/font_icon/"><b>font_icon</b>Google font to icon</a></li>
-        <li><a href="/text2pic/"><b>text2pic</b>Text to picture</a></li>
-        <li><a href="/tangshi/"><b>全唐诗</b>Tang poems</a></li>
-        <li><a href="/songci/"><b>宋词</b>Song ci poems</a></li>
-        <li><a href="/geci/"><b>歌词</b>Song lyrics</a></li>
-        <li><a href="/shiji/"><b>史记</b>Records of the Grand Historian</a></li>
-        <li><a href="/colores/"><b>配色事典</b>A dictionary of colour schemes</a></li>
-        <li><a href="/iris/"><b>Iris</b>Data browser</a></li>
+        <li><a href="/zi/"><b>识字</b><span class="en">Learning characters</span></a></li>
+        <li><a href="/tuwen/"><b>诗图</b><span class="en">Poems as pictures</span></a></li>
+        <li><a href="/icon/"><b>汉字图标</b><span class="en">Character icons</span></a></li>
+        <li><a href="/font_icon/"><b>font_icon</b><span class="zh">字体转图标</span><span class="en">Google font to icon</span></a></li>
+        <li><a href="/text2pic/"><b>text2pic</b><span class="zh">文字转图片</span><span class="en">Text to picture</span></a></li>
+        <li><a href="/tangshi/"><b>全唐诗</b><span class="en">Tang poems</span></a></li>
+        <li><a href="/songci/"><b>宋词</b><span class="en">Song ci poems</span></a></li>
+        <li><a href="/geci/"><b>歌词</b><span class="en">Song lyrics</span></a></li>
+        <li><a href="/shiji/"><b>史记</b><span class="en">Records of the Grand Historian</span></a></li>
+        <li><a href="/colores/"><b>配色事典</b><span class="en">A dictionary of colour schemes</span></a></li>
+        <li><a href="/iris/"><b>Iris</b><span class="zh">数据浏览</span><span class="en">Data browser</span></a></li>
       </ul>
-      <p class="note">这些页面保留原样，可能已无法正常使用。 These pages are kept as they were and may no longer work.</p>
+      <p class="note"><span class="zh">这些页面保留原样，可能已无法正常使用。</span><span class="en">These pages are kept as they were and may no longer work.</span></p>
     </details>
   </section>
 
-  <footer>© 有数工坊 YouData · <a href="https://github.com/youdata">github.com/youdata</a></footer>
+  <footer>© <span class="zh">有数工坊</span><span class="en">YouData</span> · <a href="https://github.com/youdata">github.com/youdata</a></footer>
 </div>
+
+<script>
+(function () {
+  var root = document.documentElement
+  var WORDS = {
+    zh: { ph: '搜索：月球、李白、河流…', title: '有数 · 大图细读', found: function (n) { return '找到 <b>' + n + '</b> 项' } },
+    en: { ph: 'Search: Moon, Li Bai, rivers…', title: 'YouData · Pages to zoom into', found: function (n) { return '<b>' + n + '</b> ' + (n === 1 ? 'match' : 'matches') } },
+  }
+  var q = document.getElementById('q'), clear = document.querySelector('.find .clear'), kbd = document.querySelector('.find kbd')
+  var found = document.getElementById('found'), none = document.getElementById('none')
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#works .work, #works .mini'))
+  var norm = function (s) { return (s || '').toLowerCase().replace(/[’'`]/g, "'").replace(/\s+/g, ' ') }
+  // what a card is found by: its text in both languages, its address and its keywords (what is inside the page)
+  cards.forEach(function (a) { a._hay = norm(a.textContent + ' ' + (a.getAttribute('data-k') || '') + ' ' + a.getAttribute('href') + ' ' + (a.querySelector('img') || {}).alt) })
+
+  function lang () { return root.getAttribute('data-lang') }
+  function setLang (l) {
+    root.setAttribute('data-lang', l); root.lang = l === 'zh' ? 'zh-Hans' : 'en'
+    try { localStorage.setItem('youdata-lang', l) } catch (e) {}
+    q.placeholder = WORDS[l].ph; document.title = WORDS[l].title
+    // a site with a tour in each language opens in this one
+    cards.forEach(function (a) { var h = a.getAttribute('data-href-' + l); if (h) a.setAttribute('href', h) })
+    filter()
+  }
+  function filter () {
+    var words = norm(q.value).trim().split(' ').filter(Boolean), n = 0
+    cards.forEach(function (a) {
+      var hit = words.every(function (w) { return a._hay.indexOf(w) >= 0 })
+      if (hit) { a.removeAttribute('data-hide'); n++ } else a.setAttribute('data-hide', '')
+    })
+    // a section with nothing left goes too; and each group of cards inside it
+    document.querySelectorAll('#works section').forEach(function (s) {
+      s.querySelectorAll('.works, .minis').forEach(function (g) { if (g.querySelector('a:not([data-hide])')) g.removeAttribute('data-hide'); else g.setAttribute('data-hide', '') })
+      if (s.querySelector('#works a:not([data-hide])')) s.removeAttribute('data-hide'); else s.setAttribute('data-hide', '')
+    })
+    var on = words.length > 0
+    found.innerHTML = on ? WORDS[lang()].found(n) : ''
+    none.hidden = !(on && n === 0)
+    clear.hidden = !q.value; kbd.hidden = !!q.value || document.activeElement === q
+    var u = new URL(location.href)
+    if (q.value) u.searchParams.set('q', q.value); else u.searchParams.delete('q')
+    history.replaceState(null, '', u)
+  }
+  document.querySelectorAll('.lang button').forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-set')) }) })
+  q.addEventListener('input', filter)
+  q.addEventListener('focus', function () { kbd.hidden = true })
+  q.addEventListener('blur', function () { kbd.hidden = !!q.value })
+  q.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { q.value = ''; filter(); q.blur() }
+    if (e.key === 'Enter') { var first = cards.filter(function (a) { return !a.hasAttribute('data-hide') })[0]; if (first && q.value) location.href = first.getAttribute('href') }
+  })
+  clear.addEventListener('click', function () { q.value = ''; filter(); q.focus() })
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== q && !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || '')) { e.preventDefault(); q.focus() }
+  })
+  var start = new URL(location.href).searchParams.get('q')
+  if (start) q.value = start
+  setLang(lang())
+})()
+</script>
 </body>
 </html>
